@@ -1,0 +1,5 @@
+"STARTUP.obj",
+"Text1.obj",
+"nokia_5110.obj" 
+TO "the car" 
+RAMSIZE(256) 

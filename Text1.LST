@@ -1,0 +1,290 @@
+C51 COMPILER V8.02   TEXT1                                                                 03/04/2012 17:16:35 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE TEXT1
+OBJECT MODULE PLACED IN Text1.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Text1.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1                                                                                    /////////////////////////////////////
+   2          //  Generated Initialization File  //
+   3          /////////////////////////////////////
+   4          
+   5          #include "C8051F410.h"
+   6          #include "nokia_5110.h"
+   7          #include "bmp_pixel.h"
+   8          char tab_1[]={0x11,0x44,0x22,0x88};
+   9          char tab_2[]={0x081,0x24,0x42,0x18};
+  10          sbit left=P0^2;
+  11          sbit right=P0^3;
+  12          bit flag=1;
+  13          char mode,i,out_1=0;
+  14          unsigned int speed,count,count_over;
+  15          sbit p00=P0^0;
+  16          sbit SOUND=P1^4;
+  17          sbit LIGHT=P1^5;
+  18          //*********************************************
+  19          void PCA_Init()
+  20          {
+  21   1          PCA0MD    &= ~0x40;
+  22   1          PCA0MD    = 0x00;
+  23   1      }
+  24          
+  25          void Timer_Init()
+  26          {
+  27   1          TCON      = 0x40;
+  28   1          TMOD      = 0x10;
+  29   1          CKCON     = 0x02;
+  30   1          TH1       = 0xFF;
+  31   1      }
+  32          
+  33          void Port_IO_Init()
+  34          {
+  35   1          // P0.0  -  Skipped,     Push-Pull,  Digital
+  36   1          // P0.1  -  Skipped,     Open-Drain, Digital
+  37   1          // P0.2  -  Skipped,     Open-Drain, Digital
+  38   1          // P0.3  -  Skipped,     Open-Drain, Digital
+  39   1          // P0.4  -  Skipped,     Push-Pull,  Digital
+  40   1          // P0.5  -  Skipped,     Push-Pull,  Digital
+  41   1          // P0.6  -  Skipped,     Push-Pull,  Digital
+  42   1          // P0.7  -  Skipped,     Push-Pull,  Digital
+  43   1      
+  44   1          // P1.0  -  Skipped,     Open-Drain, Digital
+  45   1          // P1.1  -  Skipped,     Open-Drain, Digital
+  46   1          // P1.2  -  Skipped,     Open-Drain, Digital
+  47   1          // P1.3  -  Skipped,     Open-Drain, Digital
+  48   1          // P1.4  -  Skipped,     Push-Pull,  Digital
+  49   1          // P1.5  -  Skipped,     Push-Pull,  Digital
+  50   1          // P1.6  -  Skipped,     Open-Drain, Digital
+  51   1          // P1.7  -  Skipped,     Open-Drain, Digital
+  52   1      
+  53   1          // P2.0  -  Skipped,     Push-Pull,  Digital
+  54   1          // P2.1  -  Skipped,     Push-Pull,  Digital
+  55   1          // P2.2  -  Skipped,     Push-Pull,  Digital
+C51 COMPILER V8.02   TEXT1                                                                 03/04/2012 17:16:35 PAGE 2   
+
+  56   1          // P2.3  -  Skipped,     Push-Pull,  Digital
+  57   1          // P2.4  -  Skipped,     Push-Pull,  Digital
+  58   1          // P2.5  -  Skipped,     Push-Pull,  Digital
+  59   1          // P2.6  -  Skipped,     Push-Pull,  Digital
+  60   1          // P2.7  -  Skipped,     Push-Pull,  Digital
+  61   1      
+  62   1          P0MDOUT   = 0xF1;
+  63   1          P1MDOUT   = 0x30;
+  64   1          P2MDOUT   = 0xFF;
+  65   1          XBR1      = 0x40;
+  66   1      }
+  67          
+  68          void Oscillator_Init()
+  69          {
+  70   1          OSCICN    = 0x87;
+  71   1      }
+  72          
+  73          void Interrupts_Init()
+  74          {
+  75   1          IE        = 0x88;
+  76   1      }
+  77          
+  78          // Initialization function for device,
+  79          // Call Init_Device() from your main program
+  80          void Init_Device(void)
+  81          {
+  82   1          PCA_Init();
+  83   1          Timer_Init();
+  84   1          Port_IO_Init();
+  85   1          Oscillator_Init();
+  86   1          Interrupts_Init();
+  87   1      }
+  88          
+  89          
+  90          
+  91          
+  92          //************************************************
+  93          
+  94           delay(int timer_value)
+  95          { 
+  96   1              int a;
+  97   1              for(a=0;a<timer_value;a++);
+  98   1      }
+  99          
+ 100          //=================主函数====================  
+ 101          main()
+ 102          {  
+ 103   1      Init_Device();
+ 104   1      
+ 105   1      speed=0xc000;     //电机运行速度
+ 106   1      SOUND=0;
+ 107   1      LIGHT=0;
+ 108   1      LCD_init();       //初始化液晶    
+ 109   1              LCD_write_chinese_string(0,0,12,6,0,2);
+ 110   1              LCD_write_chinese_string(0,2,12,6,6,2);
+ 111   1              LCD_write_chinese_string(0,4,12,6,12,2);
+ 112   1      while(1)
+ 113   1      { 
+ 114   2        mode=(P0&0x0c)/4;
+ 115   2      }
+ 116   1      
+ 117   1      /*mode=1;speed=5*8192;count_over=48*6;
+C51 COMPILER V8.02   TEXT1                                                                 03/04/2012 17:16:35 PAGE 3   
+
+ 118   1      while(flag);flag=1;
+ 119   1      mode=2;speed=2*8192;count_over=48*6;TR1=1;
+ 120   1      while(flag);flag=1;
+ 121   1      mode=3;speed=5*8192;count_over=48*6;TR1=1;
+ 122   1      while(flag);flag=1;
+ 123   1      mode=0;TR1=1;
+ 124   1      while(1);
+ 125   1       {
+ 126   1       if(left==0)
+ 127   1         {
+ 128   1          delay(10000);
+ 129   1          if(left==0)
+ 130   1               {
+ 131   1            mode=3;
+ 132   1                while(left==0);       //等待键盘释放
+ 133   1               }
+ 134   1         }
+ 135   1       if(right==0)
+ 136   1              {
+ 137   1              delay(10000);
+ 138   1              if(right==0)
+ 139   1               {
+ 140   1                mode=4;
+ 141   1                while(right==0);      //等待键盘释放
+ 142   1               }
+ 143   1              }  
+ 144   1      
+ 145   1      
+ 146   1       }*/     
+ 147   1      }  //end mian 
+ 148           
+ 149          //=============定时器1的中断函数==============
+ 150           void int_t1() interrupt 3    
+ 151          {
+ 152   1       TH1=speed/256;            //中断常数
+ 153   1       TL1=speed%256;
+ 154   1      // mode=left;
+ 155   1      // mode=(mode*2)|right;
+ 156   1      
+ 157   1       switch (mode)     //mode:方式（0停止，3前进，后退，2左转，1右转，5原地左转，6原地右转）
+ 158   1        {
+ 159   2              case 0:
+ 160   2                  P2=0;
+ 161   2                      break;
+ 162   2              case 3:
+ 163   2                  i++;
+ 164   2                      P2=tab_1[i&0x03];
+ 165   2                      break;
+ 166   2              /*case 2:
+ 167   2                  i--;
+ 168   2                      P2=tab_1[i&0x03];
+ 169   2                      break;*/
+ 170   2              case 2:
+ 171   2                  i++;
+ 172   2                      P2=tab_1[i&0x03]&0x0f;
+ 173   2                      break;
+ 174   2              case 1:
+ 175   2                  i++;
+ 176   2                      P2=tab_1[i&0x03]&0xf0;
+ 177   2                      break;
+ 178   2              case 5:
+ 179   2                      i++;
+C51 COMPILER V8.02   TEXT1                                                                 03/04/2012 17:16:35 PAGE 4   
+
+ 180   2                      P2=tab_2[i&0x03];
+ 181   2                      break;
+ 182   2              case 6:
+ 183   2                      i--;
+ 184   2                      P2=tab_2[i&0x03];
+ 185   2                      break;
+ 186   2              case 7:
+ 187   2                      P2=0;
+ 188   2                      break;
+ 189   2              
+ 190   2              default :
+ 191   2                      break;
+ 192   2        }       //end switch
+ 193   1       if(count>count_over)
+ 194   1              {
+ 195   2              TR1=0;
+ 196   2              count=0;
+ 197   2              flag=0;
+ 198   2              }
+ 199   1       
+ 200   1      
+ 201   1      }//end int_t0
+ 202          //=============定时器2的中断函数==============
+ 203          /* void int_t2() interrupt 5    
+ 204          {
+ 205            p00=!p00;
+ 206            TF2H=0;       }*/        //测试用
+ 207           /*count++;
+ 208           if(count>count_over)
+ 209                  {
+ 210                  TR1=0;
+ 211                  count=0;
+ 212                  flag=0;
+ 213                  }
+ 214           switch (mode)     //mode:方式（0停止，1前进，2后退，3左转，4右转，5原地左转，6原地右转）
+ 215            {
+ 216                  case 0:
+ 217                      P2=0;
+ 218                          break;
+ 219                  case 1:
+ 220                      i++;
+ 221                          P2=tab_1[i&0x03];
+ 222                          break;
+ 223                  case 2:
+ 224                      i--;
+ 225                          P2=tab_1[i&0x03];
+ 226                          break;
+ 227                  case 3:
+ 228                      i++;
+ 229                          P2=tab_1[i&0x03]&0x0f;
+ 230                          break;
+ 231                  case 4:
+ 232                      i++;
+ 233                          P2=tab_1[i&0x03]&0xf0;
+ 234                          break;
+ 235                  case 5:
+ 236                          i++;
+ 237                          P2=tab_2[i&0x03];
+ 238                          break;
+ 239                  case 6:
+ 240                          i--;
+ 241                          P2=tab_2[i&0x03];
+C51 COMPILER V8.02   TEXT1                                                                 03/04/2012 17:16:35 PAGE 5   
+
+ 242                          break;
+ 243                  case 7:
+ 244                          P2=0;
+ 245                          break;
+ 246                  
+ 247                  default :
+ 248                          break;
+ 249            }       //end switch
+ 250          
+ 251          }//end int_t1     */
+ 252          /*//=============定时器0的中断函数==============
+ 253           void int_t0() interrupt 1    
+ 254          {
+ 255            TH0=0xd7;
+ 256            TL0=0xff;
+ 257            key=!key;
+ 258                  }          //测试用
+ 259            */
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    322    ----
+   CONSTANT SIZE    =    144    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     17    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
